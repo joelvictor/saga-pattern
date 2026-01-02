@@ -32,6 +32,8 @@ dependencies {
     testImplementation("org.springframework.kafka:spring-kafka-test:$springKafkaVersion")
     testImplementation("org.testcontainers:postgresql:1.20.0")
     testImplementation("org.testcontainers:kafka:1.20.0")
+    testImplementation("org.testcontainers:junit-jupiter:1.20.0")
+    testImplementation("io.mockk:mockk:1.13.13")
 }
 
 tasks.bootJar {
