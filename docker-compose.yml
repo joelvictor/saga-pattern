@@ -1,0 +1,183 @@
+services:
+  # ============================================
+  # DATABASES (one per service)
+  # ============================================
+  
+  postgres-order:
+    image: postgres:17
+    container_name: postgres-order
+    environment:
+      POSTGRES_DB: order_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - order_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d order_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  postgres-payment:
+    image: postgres:17
+    container_name: postgres-payment
+    environment:
+      POSTGRES_DB: payment_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - payment_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d payment_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  postgres-kitchen:
+    image: postgres:17
+    container_name: postgres-kitchen
+    environment:
+      POSTGRES_DB: kitchen_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - kitchen_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d kitchen_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  postgres-delivery:
+    image: postgres:17
+    container_name: postgres-delivery
+    environment:
+      POSTGRES_DB: delivery_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"
+    volumes:
+      - delivery_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d delivery_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # KAFKA
+  # ============================================
+  
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.7.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.7.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    healthcheck:
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  # ============================================
+  # SERVICES (uncomment when ready to deploy)
+  # ============================================
+  
+  # order-service:
+  #   build:
+  #     context: ./order-service
+  #     dockerfile: Dockerfile
+  #   container_name: order-service
+  #   depends_on:
+  #     postgres-order:
+  #       condition: service_healthy
+  #     kafka:
+  #       condition: service_healthy
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     DB_HOST: postgres-order
+  #     DB_PORT: 5432
+  #     KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+  #     PAYMENT_SERVICE_URL: http://payment-service:8081
+  
+  # payment-service:
+  #   build:
+  #     context: ./payment-service
+  #     dockerfile: Dockerfile
+  #   container_name: payment-service
+  #   depends_on:
+  #     postgres-payment:
+  #       condition: service_healthy
+  #   ports:
+  #     - "8081:8081"
+  #   environment:
+  #     DB_HOST: postgres-payment
+  #     DB_PORT: 5432
+  
+  # kitchen-service:
+  #   build:
+  #     context: ./kitchen-service
+  #     dockerfile: Dockerfile
+  #   container_name: kitchen-service
+  #   depends_on:
+  #     postgres-kitchen:
+  #       condition: service_healthy
+  #     kafka:
+  #       condition: service_healthy
+  #   ports:
+  #     - "8082:8082"
+  #   environment:
+  #     DB_HOST: postgres-kitchen
+  #     DB_PORT: 5432
+  #     KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+  
+  # delivery-service:
+  #   build:
+  #     context: ./delivery-service
+  #     dockerfile: Dockerfile
+  #   container_name: delivery-service
+  #   depends_on:
+  #     postgres-delivery:
+  #       condition: service_healthy
+  #     kafka:
+  #       condition: service_healthy
+  #   ports:
+  #     - "8083:8083"
+  #   environment:
+  #     DB_HOST: postgres-delivery
+  #     DB_PORT: 5432
+  #     KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+
+volumes:
+  order_data:
+  payment_data:
+  kitchen_data:
+  delivery_data:
