@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git checkout -b feature/avro-orchestration-v2)",
+      "Bash(mkdir -p \"D:\\projetos\\saga-pattern\\shared-kernel\\src\\main\\avro\")",
+      "Bash(mkdir -p \"D:\\projetos\\saga-pattern\\shared-kernel\\src\\main\\kotlin\\com\\fooddelivery\\shared\\avro\")",
+      "Bash(mkdir -p \"D:\\projetos\\saga-pattern\\shared-kernel\\src\\main\\resources\\avro\")",
+      "Bash(cp \"D:\\projetos\\saga-pattern\\shared-kernel\\src\\main\\avro\\*.avsc\" \"D:\\projetos\\saga-pattern\\shared-kernel\\src\\main\\resources\\avro\"\")",
+      "Bash(xcopy /Y \"D:\\projetos\\saga-pattern\\shared-kernel\\src\\main\\avro\\*\" \"D:\\projetos\\saga-pattern\\shared-kernel\\src\\main\\resources\\avro\"\")",
+      "Bash(cd \"D:\\projetos\\saga-pattern\")",
+      "Bash(.gradlew.bat compileKotlin --no-daemon)",
+      "Bash(cmd /c \"cd /d D:\\projetos\\saga-pattern && gradlew.bat compileKotlin --no-daemon\")",
+      "Bash(powershell -Command \"cd ''D:\\projetos\\saga-pattern''; .\\gradlew.bat compileKotlin --no-daemon 2>&1\")",
+      "Bash(git -C \"D:\\projetos\\saga-pattern\" status)"
+    ],
+    "deny": []
+  }
+}

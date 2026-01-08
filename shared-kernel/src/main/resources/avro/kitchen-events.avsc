@@ -1,0 +1,33 @@
+{
+  "namespace": "com.fooddelivery.avro.kitchen",
+  "type": "record",
+  "name": "KitchenEventEnvelope",
+  "fields": [
+    {"name": "eventType", "type": {"type": "enum", "name": "KitchenEventType", "symbols": ["TICKET_ACCEPTED", "TICKET_REJECTED", "TICKET_READY"]}},
+    {"name": "eventId", "type": "string"},
+    {"name": "orderId", "type": "string"},
+    {"name": "timestamp", "type": "long", "logicalType": "timestamp-millis"},
+    {"name": "ticketAccepted", "type": ["null", {
+      "type": "record",
+      "name": "TicketAcceptedEvent",
+      "fields": [
+        {"name": "ticketId", "type": "string"},
+        {"name": "estimatedPrepTimeMinutes", "type": "int"}
+      ]
+    }], "default": null},
+    {"name": "ticketRejected", "type": ["null", {
+      "type": "record",
+      "name": "TicketRejectedEvent",
+      "fields": [
+        {"name": "reason", "type": "string"}
+      ]
+    }], "default": null},
+    {"name": "ticketReady", "type": ["null", {
+      "type": "record",
+      "name": "TicketReadyEvent",
+      "fields": [
+        {"name": "ticketId", "type": "string"}
+      ]
+    }], "default": null}
+  ]
+}

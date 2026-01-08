@@ -8,6 +8,11 @@ plugins {
 
 val springKafkaVersion: String by project
 val postgresDriverVersion: String by project
+val confluentVersion: String by project
+
+repositories {
+    maven("https://packages.confluent.io/maven/")
+}
 
 dependencies {
     implementation(project(":shared-kernel"))
@@ -19,6 +24,9 @@ dependencies {
     
     // Kafka
     implementation("org.springframework.kafka:spring-kafka:$springKafkaVersion")
+    
+    // Kafka Avro Serialization
+    implementation("io.confluent:kafka-avro-serializer:$confluentVersion")
     
     // Database
     runtimeOnly("org.postgresql:postgresql:$postgresDriverVersion")

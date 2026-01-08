@@ -1,0 +1,11 @@
+{
+  "namespace": "com.fooddelivery.avro",
+  "type": "record",
+  "name": "OrderItemAvro",
+  "fields": [
+    {"name": "productId", "type": "string"},
+    {"name": "productName", "type": "string"},
+    {"name": "quantity", "type": "int"},
+    {"name": "unitPrice", "type": "string"}
+  ]
+}

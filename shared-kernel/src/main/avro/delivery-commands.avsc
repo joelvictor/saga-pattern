@@ -1,0 +1,25 @@
+{
+  "namespace": "com.fooddelivery.avro.delivery",
+  "type": "record",
+  "name": "DeliveryCommandEnvelope",
+  "fields": [
+    {"name": "commandType", "type": {"type": "enum", "name": "DeliveryCommandType", "symbols": ["SCHEDULE_DELIVERY", "CANCEL_DELIVERY"]}},
+    {"name": "orderId", "type": "string"},
+    {"name": "timestamp", "type": "long", "logicalType": "timestamp-millis"},
+    {"name": "scheduleDelivery", "type": ["null", {
+      "type": "record",
+      "name": "ScheduleDeliveryCommand",
+      "fields": [
+        {"name": "deliveryAddress", "type": "string"},
+        {"name": "estimatedPickupTime", "type": "long", "logicalType": "timestamp-millis"}
+      ]
+    }], "default": null},
+    {"name": "cancelDelivery", "type": ["null", {
+      "type": "record",
+      "name": "CancelDeliveryCommand",
+      "fields": [
+        {"name": "reason", "type": "string"}
+      ]
+    }], "default": null}
+  ]
+}

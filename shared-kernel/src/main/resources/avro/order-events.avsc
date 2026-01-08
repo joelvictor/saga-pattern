@@ -1,0 +1,33 @@
+{
+  "namespace": "com.fooddelivery.avro.order",
+  "type": "record",
+  "name": "OrderEventEnvelope",
+  "fields": [
+    {"name": "eventType", "type": {"type": "enum", "name": "OrderEventType", "symbols": ["ORDER_CREATED", "ORDER_COMPLETED", "ORDER_CANCELLED"]}},
+    {"name": "eventId", "type": "string"},
+    {"name": "orderId", "type": "string"},
+    {"name": "timestamp", "type": "long", "logicalType": "timestamp-millis"},
+    {"name": "orderCreated", "type": ["null", {
+      "type": "record",
+      "name": "OrderCreatedEvent",
+      "fields": [
+        {"name": "customerId", "type": "string"},
+        {"name": "totalAmount", "type": "string"}
+      ]
+    }], "default": null},
+    {"name": "orderCompleted", "type": ["null", {
+      "type": "record",
+      "name": "OrderCompletedEvent",
+      "fields": [
+        {"name": "completedAt", "type": "long", "logicalType": "timestamp-millis"}
+      ]
+    }], "default": null},
+    {"name": "orderCancelled", "type": ["null", {
+      "type": "record",
+      "name": "OrderCancelledEvent",
+      "fields": [
+        {"name": "reason", "type": "string"}
+      ]
+    }], "default": null}
+  ]
+}

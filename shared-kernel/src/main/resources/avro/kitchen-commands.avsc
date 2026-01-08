@@ -1,0 +1,34 @@
+{
+  "namespace": "com.fooddelivery.avro.kitchen",
+  "type": "record",
+  "name": "KitchenCommandEnvelope",
+  "fields": [
+    {"name": "commandType", "type": {"type": "enum", "name": "KitchenCommandType", "symbols": ["PREPARE_ORDER", "CANCEL_TICKET"]}},
+    {"name": "orderId", "type": "string"},
+    {"name": "timestamp", "type": "long", "logicalType": "timestamp-millis"},
+    {"name": "prepareOrder", "type": ["null", {
+      "type": "record",
+      "name": "PrepareOrderCommand",
+      "fields": [
+        {"name": "items", "type": {"type": "array", "items": {
+          "type": "record",
+          "name": "OrderItemAvro",
+          "fields": [
+            {"name": "productId", "type": "string"},
+            {"name": "productName", "type": "string"},
+            {"name": "quantity", "type": "int"},
+            {"name": "unitPrice", "type": "string"}
+          ]
+        }}},
+        {"name": "priority", "type": "int", "default": 0}
+      ]
+    }], "default": null},
+    {"name": "cancelTicket", "type": ["null", {
+      "type": "record",
+      "name": "CancelTicketCommand",
+      "fields": [
+        {"name": "reason", "type": "string"}
+      ]
+    }], "default": null}
+  ]
+}

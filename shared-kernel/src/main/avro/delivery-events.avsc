@@ -1,0 +1,42 @@
+{
+  "namespace": "com.fooddelivery.avro.delivery",
+  "type": "record",
+  "name": "DeliveryEventEnvelope",
+  "fields": [
+    {"name": "eventType", "type": {"type": "enum", "name": "DeliveryEventType", "symbols": ["DELIVERY_SCHEDULED", "DELIVERY_PICKED_UP", "DELIVERY_COMPLETED", "DELIVERY_FAILED"]}},
+    {"name": "eventId", "type": "string"},
+    {"name": "orderId", "type": "string"},
+    {"name": "timestamp", "type": "long", "logicalType": "timestamp-millis"},
+    {"name": "deliveryScheduled", "type": ["null", {
+      "type": "record",
+      "name": "DeliveryScheduledEvent",
+      "fields": [
+        {"name": "deliveryId", "type": "string"},
+        {"name": "estimatedDeliveryTime", "type": "long", "logicalType": "timestamp-millis"}
+      ]
+    }], "default": null},
+    {"name": "deliveryPickedUp", "type": ["null", {
+      "type": "record",
+      "name": "DeliveryPickedUpEvent",
+      "fields": [
+        {"name": "deliveryId", "type": "string"}
+      ]
+    }], "default": null},
+    {"name": "deliveryCompleted", "type": ["null", {
+      "type": "record",
+      "name": "DeliveryCompletedEvent",
+      "fields": [
+        {"name": "deliveryId", "type": "string"},
+        {"name": "completedAt", "type": "long", "logicalType": "timestamp-millis"}
+      ]
+    }], "default": null},
+    {"name": "deliveryFailed", "type": ["null", {
+      "type": "record",
+      "name": "DeliveryFailedEvent",
+      "fields": [
+        {"name": "deliveryId", "type": "string"},
+        {"name": "reason", "type": "string"}
+      ]
+    }], "default": null}
+  ]
+}
